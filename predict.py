@@ -1,6 +1,11 @@
+import os
+import dill
+
 import argparse
 import numpy as np
 import pandas as pd
+
+from src import config as cfg
 
 
 # Parsing script arguments
@@ -12,12 +17,25 @@ args = parser.parse_args()
 data = pd.read_csv(args.tsv_path, sep="\t")
 
 #####
-# TODO - your prediction code here
+with open(os.path.join(cfg.final_models_path, cfg.final_pipeline_filename), 'rb') as f:
+    pipeline = dill.load(f)
+    
+with open(os.path.join(cfg.final_models_path, cfg.final_model_filename), 'rb') as f:
+    model = dill.load(f)
+    
+X = pipeline.transform(data)
+preds = model.predict(X)
+
+# preds = np.expm1(model.predict(X))
+
 
 # Example:
 prediction_df = pd.DataFrame(columns=['id', 'revenue'])
 prediction_df['id'] = data['id']
-prediction_df['revenue'] = data['revenue'].mean()
+prediction_df['revenue'] = preds
+
+prediction_df['revenue'] = prediction_df['revenue'].apply(np.expm1)
+
 ####
 
 # TODO - How to export prediction results
