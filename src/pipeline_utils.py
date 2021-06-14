@@ -73,8 +73,8 @@ class Json_one_hot_encoder:
                     X[feat + '_' + col + '_' + str(val)] = X_feat_col.apply(lambda x: x.get(val, 0))
                 X[feat + '_' + col + '_unique'] = X_feat_col.apply(len)
             X_feat_len = X[feat].apply(len)
-            if not all(X_feat_len.values == X[feat + '_' + col + '_unique'].values):
-                X[feat + '_len'] = X_feat_len
+#             if not all(X_feat_len.values == X[feat + '_' + col + '_unique'].values):
+            X[feat + '_len'] = X_feat_len
         return X
 
 
